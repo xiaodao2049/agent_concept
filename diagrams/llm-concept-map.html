@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The LLM concept stack · Architecture</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&family=Noto+Serif:ital@0;1&family=Noto+Sans+KR:wght@400;500;600&family=Noto+Serif+KR:wght@400&family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #f5f5f5;
+      --color-ink:     #2d3142;
+      --color-muted:   #4f5d75;
+      --color-accent:  #bf4520;
+      --font-sans:     'Geist', system-ui, sans-serif;
+      --font-serif:    'Instrument Serif', 'Noto Serif', 'Noto Serif KR', serif;
+      --font-mono:     'Geist Mono', ui-monospace, monospace;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+    }
+
+    .frame { max-width: 1200px; width: 100%; }
+    .diagram-container { width: 100%; overflow-x: auto; }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    h1 {
+      font-family: var(--font-serif);
+      font-size: 1.75rem;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--color-ink);
+      margin-bottom: 1.5rem;
+    }
+
+    svg { width: 100%; min-width: 960px; display: block; }
+
+    @media print {
+      .diagram-container { overflow-x: visible; }
+      svg { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Architecture · Concept map</p>
+    <h1>The LLM concept stack</h1>
+
+    <div class="diagram-container">
+      <svg viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="llm-concept-map-title llm-concept-map-desc">
+        <title id="llm-concept-map-title">The LLM concept stack</title>
+        <desc id="llm-concept-map-desc">Layered architecture showing a harness orchestrating a model and subagents, calling tools through MCP, loading skills, retrieving RAG evidence, reading and writing memory, and a plugin installing into the harness.</desc>
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+          <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+        </defs>
+
+        <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+        <!-- Zones (drawn before arrows and nodes) -->
+        <rect x="40" y="112" width="416" height="304" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+        <rect x="48" y="116" width="64" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="80" y="125" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">RUNTIME</text>
+
+        <rect x="520" y="112" width="400" height="332" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+        <rect x="528" y="116" width="72" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="564" y="125" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">CAPABILITY</text>
+
+        <rect x="40" y="428" width="416" height="100" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+        <rect x="48" y="432" width="48" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="72" y="441" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">MODEL</text>
+
+        <!-- Arrows first (behind boxes) -->
+        <line x1="324" y1="88" x2="324" y2="144" stroke="#4f5d75" stroke-width="1" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+        <line x1="224" y1="284" x2="168" y2="284" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="324" y1="408" x2="324" y2="460" stroke="#bf4520" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+        <line x1="424" y1="172" x2="560" y2="172" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="424" y1="248" x2="560" y2="248" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="700" y1="248" x2="740" y2="248" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="424" y1="324" x2="560" y2="324" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="424" y1="400" x2="560" y2="400" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+        <!-- Arrow labels (opaque masks, 6-10px clear of their stroke) -->
+        <rect x="332" y="106" width="56" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="360" y="115" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">INSTALLS</text>
+
+        <rect x="178" y="264" width="36" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="196" y="273" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">SPAWN</text>
+
+        <rect x="332" y="422" width="40" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="352" y="431" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">INFER</text>
+
+        <rect x="470" y="152" width="44" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="492" y="161" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">LOADS</text>
+
+        <rect x="464" y="228" width="56" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="492" y="237" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">JSON-RPC</text>
+
+        <rect x="462" y="304" width="60" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="492" y="313" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">RETRIEVES</text>
+
+        <rect x="460" y="380" width="64" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="492" y="389" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">READ/WRITE</text>
+
+        <!-- Node: Plugin (delivery) -->
+        <rect x="224" y="40" width="200" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="224" y="40" width="200" height="48" rx="6" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+        <rect x="232" y="46" width="32" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.22)" stroke-width="0.8"/>
+        <text x="248" y="55" fill="#5a6580" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">PKG</text>
+        <text x="324" y="66" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', system-ui, sans-serif" text-anchor="middle">Plugin</text>
+        <text x="324" y="81" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">skills · MCP · hooks</text>
+
+        <!-- Node: Harness (focal) -->
+        <rect x="224" y="144" width="200" height="264" rx="6" fill="#f5f5f5"/>
+        <rect x="224" y="144" width="200" height="264" rx="6" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1"/>
+        <rect x="232" y="150" width="32" height="12" rx="2" fill="transparent" stroke="rgba(191,69,32,0.50)" stroke-width="0.8"/>
+        <text x="248" y="159" fill="#bf4520" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">RUN</text>
+        <text x="324" y="196" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', system-ui, sans-serif" text-anchor="middle">Harness</text>
+        <text x="324" y="212" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">agent runtime</text>
+        <text x="324" y="242" fill="#5a6580" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">OBSERVE · ACT · UPDATE</text>
+
+        <!-- Node: Subagent (runtime) -->
+        <rect x="56" y="252" width="112" height="64" rx="6" fill="#f5f5f5"/>
+        <rect x="56" y="252" width="112" height="64" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <rect x="64" y="258" width="32" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+        <text x="80" y="267" fill="#5a6580" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">CTX</text>
+        <text x="112" y="286" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', system-ui, sans-serif" text-anchor="middle">Subagent</text>
+        <text x="112" y="302" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">fresh context</text>
+
+        <!-- Node: Model -->
+        <rect x="204" y="460" width="240" height="56" rx="6" fill="#f5f5f5"/>
+        <rect x="204" y="460" width="240" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <rect x="212" y="466" width="32" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+        <text x="228" y="475" fill="#5a6580" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">MDL</text>
+        <text x="324" y="490" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', system-ui, sans-serif" text-anchor="middle">Model</text>
+        <text x="324" y="506" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">weights · inference</text>
+
+        <!-- Node: Skill -->
+        <rect x="560" y="144" width="320" height="56" rx="6" fill="#f5f5f5"/>
+        <rect x="560" y="144" width="320" height="56" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+        <rect x="568" y="150" width="32" height="12" rx="2" fill="transparent" stroke="rgba(79,93,117,0.50)" stroke-width="0.8"/>
+        <text x="584" y="159" fill="#5a6580" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">SKL</text>
+        <text x="720" y="174" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', system-ui, sans-serif" text-anchor="middle">Skill</text>
+        <text x="720" y="190" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">SKILL.md · scripts</text>
+
+        <!-- Node: MCP -->
+        <rect x="560" y="220" width="140" height="56" rx="6" fill="#f5f5f5"/>
+        <rect x="560" y="220" width="140" height="56" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+        <rect x="568" y="226" width="40" height="12" rx="2" fill="transparent" stroke="rgba(79,93,117,0.50)" stroke-width="0.8"/>
+        <text x="588" y="235" fill="#5a6580" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">PROTO</text>
+        <text x="630" y="250" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', system-ui, sans-serif" text-anchor="middle">MCP</text>
+        <text x="630" y="266" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">JSON-RPC</text>
+
+        <!-- Node: Tool -->
+        <rect x="740" y="220" width="140" height="56" rx="6" fill="#f5f5f5"/>
+        <rect x="740" y="220" width="140" height="56" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+        <rect x="748" y="226" width="32" height="12" rx="2" fill="transparent" stroke="rgba(79,93,117,0.50)" stroke-width="0.8"/>
+        <text x="764" y="235" fill="#5a6580" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">TOL</text>
+        <text x="810" y="250" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', system-ui, sans-serif" text-anchor="middle">Tool</text>
+        <text x="810" y="266" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">via MCP</text>
+
+        <!-- Node: RAG -->
+        <rect x="560" y="296" width="320" height="56" rx="6" fill="#f5f5f5"/>
+        <rect x="560" y="296" width="320" height="56" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+        <rect x="568" y="302" width="32" height="12" rx="2" fill="transparent" stroke="rgba(79,93,117,0.50)" stroke-width="0.8"/>
+        <text x="584" y="311" fill="#5a6580" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">RET</text>
+        <text x="720" y="326" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', system-ui, sans-serif" text-anchor="middle">RAG</text>
+        <text x="720" y="342" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">retrieved evidence</text>
+
+        <!-- Node: Memory -->
+        <rect x="560" y="372" width="320" height="56" rx="6" fill="#f5f5f5"/>
+        <rect x="560" y="372" width="320" height="56" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+        <rect x="568" y="378" width="32" height="12" rx="2" fill="transparent" stroke="rgba(79,93,117,0.50)" stroke-width="0.8"/>
+        <text x="584" y="387" fill="#5a6580" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">MEM</text>
+        <text x="720" y="402" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', system-ui, sans-serif" text-anchor="middle">Memory</text>
+        <text x="720" y="418" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">facts · preferences</text>
+
+        <!-- Legend strip -->
+        <line x1="40" y1="540" x2="920" y2="540" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+        <text x="40" y="556" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">LEGEND</text>
+
+        <rect x="40" y="564" width="14" height="10" rx="2" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1"/>
+        <text x="60" y="573" fill="#4f5d75" font-size="8.5" font-family="'Geist', system-ui, sans-serif">Focal / harness</text>
+
+        <rect x="176" y="564" width="14" height="10" rx="2" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <text x="196" y="573" fill="#4f5d75" font-size="8.5" font-family="'Geist', system-ui, sans-serif">Runtime / model</text>
+
+        <rect x="332" y="564" width="14" height="10" rx="2" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+        <text x="352" y="573" fill="#4f5d75" font-size="8.5" font-family="'Geist', system-ui, sans-serif">Capability</text>
+
+        <rect x="460" y="564" width="14" height="10" rx="2" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+        <text x="480" y="573" fill="#4f5d75" font-size="8.5" font-family="'Geist', system-ui, sans-serif">Delivery</text>
+
+        <line x1="594" y1="569" x2="622" y2="569" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <text x="630" y="573" fill="#4f5d75" font-size="8.5" font-family="'Geist', system-ui, sans-serif">Calls / loads</text>
+
+        <line x1="746" y1="569" x2="774" y2="569" stroke="#4f5d75" stroke-width="1" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+        <text x="782" y="573" fill="#4f5d75" font-size="8.5" font-family="'Geist', system-ui, sans-serif">Installs</text>
+      </svg>
+    </div>
+  </div>
+</body>
+</html>

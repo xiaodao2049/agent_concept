@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>能力升级的成本阶梯 · Process</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:  #f5f5f5;
+      --color-ink:    #2d3142;
+      --color-muted:  #4f5d75;
+      --color-accent: #bf4520;
+      --font-sans:    'Geist', 'Noto Sans SC', 'Microsoft YaHei', system-ui, sans-serif;
+      --font-serif:   'Instrument Serif', 'Noto Serif', 'Songti SC', serif;
+      --font-mono:    'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+    }
+    .frame { max-width: 1200px; width: 100%; }
+    .diagram-container { width: 100%; overflow-x: auto; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: 1.75rem;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--color-ink);
+      margin-bottom: 1.5rem;
+    }
+    svg { width: 100%; min-width: 960px; display: block; }
+    @media print {
+      .diagram-container { overflow-x: visible; }
+      svg { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Process · Capability ladder</p>
+    <h1>能力升级的成本阶梯</h1>
+
+    <div class="diagram-container">
+      <svg viewBox="0 0 960 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="flow-cost-ladder-title flow-cost-ladder-desc">
+        <title id="flow-cost-ladder-title">能力升级的成本阶梯</title>
+        <desc id="flow-cost-ladder-desc">从改提示词或加 skill 开始，依次经过 RAG、换更强模型、微调，最后才到强化学习；成本、周期与不可逆性向右上递增，大多数问题在前两级解决。</desc>
+        <defs>
+          <marker id="flow-cost-ladder-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+          <marker id="flow-cost-ladder-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+        </defs>
+
+        <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+        <text x="480" y="84" font-family="'Instrument Serif', 'Noto Serif', serif" font-size="14" font-style="italic" fill="#4f5d75" text-anchor="middle">Cost, lead time, and irreversibility rise to the right.</text>
+
+        <!-- connectors -->
+        <path d="M 216 384 H 226 Q 232 384 232 378 V 338 Q 232 332 238 332 H 248" fill="none" stroke="#4f5d75" stroke-width="1" marker-end="url(#flow-cost-ladder-arrow)"/>
+        <path d="M 388 332 H 398 Q 404 332 404 326 V 286 Q 404 280 410 280 H 420" fill="none" stroke="#4f5d75" stroke-width="1" marker-end="url(#flow-cost-ladder-arrow)"/>
+        <path d="M 560 280 H 570 Q 576 280 576 274 V 234 Q 576 228 582 228 H 592" fill="none" stroke="#4f5d75" stroke-width="1" marker-end="url(#flow-cost-ladder-arrow)"/>
+        <path d="M 732 228 H 742 Q 748 228 748 222 V 182 Q 748 176 754 176 H 764" fill="none" stroke="#4f5d75" stroke-width="1" marker-end="url(#flow-cost-ladder-arrow)"/>
+
+        <!-- start marker -->
+        <text x="76" y="336" font-family="'Geist Mono', monospace" font-size="8" font-weight="500" fill="#bf4520" letter-spacing="0.14em">START HERE</text>
+
+        <!-- steps -->
+        <g font-family="'Geist', 'Noto Sans SC', 'Microsoft YaHei', sans-serif">
+          <rect x="76" y="352" width="140" height="64" rx="6" fill="#f5f5f5"/>
+          <rect x="76" y="352" width="140" height="64" rx="6" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1.2"/>
+          <text x="146" y="379" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle">Prompt / Skill</text>
+          <text x="146" y="397" font-family="'Geist Mono', monospace" font-size="9" fill="#5a6580" text-anchor="middle">cheap · fast</text>
+
+          <rect x="248" y="300" width="140" height="64" rx="6" fill="#f5f5f5"/>
+          <rect x="248" y="300" width="140" height="64" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+          <text x="318" y="327" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle">RAG</text>
+          <text x="318" y="345" font-family="'Geist Mono', monospace" font-size="9" fill="#5a6580" text-anchor="middle">retrieval · memory</text>
+
+          <rect x="420" y="248" width="140" height="64" rx="6" fill="#f5f5f5"/>
+          <rect x="420" y="248" width="140" height="64" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+          <text x="490" y="275" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle">Model swap</text>
+          <text x="490" y="293" font-family="'Geist Mono', monospace" font-size="9" fill="#5a6580" text-anchor="middle">stronger base</text>
+
+          <rect x="592" y="196" width="140" height="64" rx="6" fill="#f5f5f5"/>
+          <rect x="592" y="196" width="140" height="64" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+          <text x="662" y="223" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle">Fine-tune</text>
+          <text x="662" y="241" font-family="'Geist Mono', monospace" font-size="9" fill="#5a6580" text-anchor="middle">SFT · LoRA</text>
+
+          <rect x="764" y="144" width="140" height="64" rx="6" fill="#f5f5f5"/>
+          <rect x="764" y="144" width="140" height="64" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+          <text x="834" y="171" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle">RL</text>
+          <text x="834" y="189" font-family="'Geist Mono', monospace" font-size="9" fill="#5a6580" text-anchor="middle">RLHF · DPO · GRPO</text>
+        </g>
+
+        <!-- bottom bracket -->
+        <path d="M 76 436 V 444 H 388 V 436" fill="none" stroke="rgba(45,49,66,0.20)" stroke-width="1"/>
+        <text x="232" y="462" font-family="'Geist', 'Noto Sans SC', 'Microsoft YaHei', sans-serif" font-size="12" fill="#4f5d75" text-anchor="middle">大多数问题在前两级解决</text>
+      </svg>
+    </div>
+  </div>
+</body>
+</html>
